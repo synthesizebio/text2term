@@ -46,9 +46,11 @@ class Text2TermTestSuite(unittest.TestCase):
         assert clo_cache.cache_exists() is True
 
     def test_caching_ontology_set(self):
-        nr_ontologies_in_registry = 8
+        ontology_registry_filepath = os.path.join("..", "text2term", "resources", "ontologies.csv")
+        nr_ontologies_in_registry = len(pd.read_csv(ontology_registry_filepath))
+
         # Test caching the set of ontologies specified in resources/ontologies.csv
-        caches = text2term.cache_ontology_set(os.path.join("..", "text2term", "resources", "ontologies.csv"))
+        caches = text2term.cache_ontology_set(ontology_registry_filepath)
         assert len(caches) == nr_ontologies_in_registry
 
     def test_mapping_to_cached_ontology(self):
