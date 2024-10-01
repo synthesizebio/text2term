@@ -90,7 +90,7 @@ Change to the directory specified in the “Location” field, e.g.:
 ```cd /opt/homebrew/lib/python3.9/site-packages```
 
 > [!NOTE]
-> If the tool is cloned from GitHub and then installed using `pip install path/to/text2term`—where `path/to/text2term` is the cloned folder containing `setup.py`—then text2term can be called from that folder
+> When cloned from GitHub and then installed using `pip install path/to/text2term`—where `path/to/text2term` is the cloned folder containing `setup.py`—text2term can be called from that folder
 
 Then you can run text2term commands from the terminal. For example, to show a help message describing all arguments type into a terminal:
 ```shell
