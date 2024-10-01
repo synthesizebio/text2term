@@ -5,11 +5,11 @@
    <a href="https://pypi.org/project/text2term" target="_blank">
         <img alt="PyPI" src="https://img.shields.io/pypi/v/text2term" />
    </a>
-   <a href="https://github.com/ccb-hms/ontology-mapper/blob/main/LICENSE" target="_blank">
+   <a href="https://github.com/rsgoncalves/text2term/blob/main/LICENSE" target="_blank">
         <img alt="PyPI - License" src="https://img.shields.io/pypi/l/text2term" />
    </a>
-   <a href="https://github.com/ccb-hms/ontology-mapper/actions/workflows/github_test.yml" target="_blank">
-        <img alt="Tests" src="https://github.com/ccb-hms/ontology-mapper/actions/workflows/github_test.yml/badge.svg" />
+   <a href="https://github.com/rsgoncalves/text2term/actions/workflows/github_test.yml" target="_blank">
+        <img alt="Tests" src="https://github.com/rsgoncalves/text2term/actions/workflows/github_test.yml/badge.svg" />
    </a>
    <a href="https://doi.org/10.48550/arXiv.2407.02626" target="_blank">
         <img alt="arXiv preprint" src="https://img.shields.io/badge/DOI-arXiv:2407.02626-orange" />
@@ -80,7 +80,19 @@ dfo = mondo.map_terms(source_terms=["asthma", "acute bronchitis"])
 
 
 ### Examples of Command Line Interface Use
-To show a help message describing all arguments type into a terminal:
+To use text2term from the command-line, the current working folder (in the command line) must be the folder containing the text2term package. This can be achieved as follows:
+
+Identify where pip installed text2term using:
+```pip show texterm```
+
+Change to the directory specified in the “Location” field, e.g.:
+
+```cd /opt/homebrew/lib/python3.9/site-packages```
+
+> [!NOTE]
+> If the tool is cloned from GitHub and then installed using `pip install path/to/text2term`—where `path/to/text2term` is the cloned folder containing `setup.py`—then text2term can be called from that folder
+
+Then you can run text2term commands from the terminal. For example, to show a help message describing all arguments type into a terminal:
 ```shell
 python text2term --help
 ```
@@ -205,7 +217,7 @@ text2term.cache_ontology(ontology_url, ontology_acronym="", base_iris=())
 ```
 This caches a single ontology from a URL or file path, and takes an optional acronym that will be used to reference the cached ontology later. If no acronym is given, the URL is used as the name.
 
-It is also possible to cache multiple ontologies, whose names and URLs are specified in a table formatted as such `acronym,version,url`. An example is provided in [resources/ontologies.csv](https://github.com/ccb-hms/ontology-mapper/blob/main/text2term/resources/ontologies.csv):
+It is also possible to cache multiple ontologies, whose names and URLs are specified in a table formatted as such `acronym,version,url`. An example is provided in [resources/ontologies.csv](https://github.com/rsgoncalves/text2term/blob/main/text2term/resources/ontologies.csv):
 ```python
 text2term.cache_ontology_set(ontology_registry_path)
 ```

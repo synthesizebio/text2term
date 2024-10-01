@@ -25,7 +25,6 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 html_theme = 'pyramid'
 html_static_path = ['_static']
-# html_logo = "ccb_logo.jpg"
 html_theme_options = {
 	'sidebarwidth': 280
 }

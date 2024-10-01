@@ -1,5 +1,5 @@
 # ontology-mapper-ui
-The following information pertains to the text2term UI, which is written [here](https://github.com/ccb-hms/ontology-mapper-ui) and runs online [here](https://text2term.hms.harvard.edu/). It supports fewer features than the base package does, but provides a user interface for non-programmers.
+The following information pertains to the text2term UI, which is written [here](https://github.com/rsgoncalves/text2term-ui) and runs online [here](https://text2term.hms.harvard.edu/). It supports fewer features than the base package does, but provides a user interface for non-programmers.
 
 ### Running Locally via Node + Python
 
