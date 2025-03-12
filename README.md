@@ -11,8 +11,8 @@
    <a href="https://github.com/rsgoncalves/text2term/actions/workflows/github_test.yml" target="_blank">
         <img alt="Tests" src="https://github.com/rsgoncalves/text2term/actions/workflows/github_test.yml/badge.svg" />
    </a>
-   <a href="https://doi.org/10.48550/arXiv.2407.02626" target="_blank">
-        <img alt="arXiv preprint" src="https://img.shields.io/badge/DOI-arXiv:2407.02626-orange" />
+   <a href="https://doi.org/10.1093/database/baae119" target="_blank">
+      <img alt="Citation" src="https://img.shields.io/badge/DOI-10.1093/database/baae119-orange" />
    </a>
    <a href="https://shields.io/badges/py-pi-downloads" target="_blank">
       <img alt="PyPI Installs" src="https://img.shields.io/pypi/dm/text2term?label=pypi%20installs&color=D3CB40">
