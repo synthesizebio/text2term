@@ -5,6 +5,7 @@ import logging
 import datetime
 import time
 import pandas as pd
+from pathlib import Path
 from text2term import onto_utils
 from text2term import onto_cache
 from text2term.mapper import Mapper
@@ -31,7 +32,7 @@ LOGGER = onto_utils.get_logger(__name__, level=logging.INFO)
 def map_terms(source_terms, target_ontology, base_iris=(), csv_columns=(), excl_deprecated=False, max_mappings=3,
               min_score=0.3, mapper=Mapper.TFIDF, output_file='', save_graphs=False, save_mappings=False,
               source_terms_ids=(), separator=',', use_cache=False, term_type=OntologyTermType.CLASS,
-              incl_unmapped=False, bioportal_apikey=""):
+              incl_unmapped=False, excl_metadata=False, bioportal_apikey=""):
     """
     Maps the terms in the given list to the specified target ontology.
 
@@ -75,6 +76,8 @@ def map_terms(source_terms, target_ontology, base_iris=(), csv_columns=(), excl_
         The type(s) of ontology terms to map to, which can be 'class' or 'property' or 'any'
     incl_unmapped : bool
         Include unmapped terms in the output data frame
+    excl_metadata : bool
+        Exclude metadata in output file
     bioportal_apikey : str
         BioPortal API Key to use along with the BioPortal mapper option
 
@@ -108,7 +111,7 @@ def map_terms(source_terms, target_ontology, base_iris=(), csv_columns=(), excl_
         mappings_df["Mapping Score"] = mappings_df["Mapping Score"].astype(float).round(decimals=3)
     if save_mappings:
         _save_mappings(mappings_df, output_file, min_score, mapper, target_ontology, base_iris,
-                       excl_deprecated, max_mappings, term_type, source_terms, incl_unmapped)
+                       excl_deprecated, max_mappings, term_type, source_terms, incl_unmapped, excl_metadata)
     if save_graphs:
         _save_graphs(target_terms, output_file)
     return mappings_df
@@ -323,28 +326,52 @@ def _add_tag(tags, term, to_add, ignore=False):
                 tagged_term.add_tags([to_add])
 
 
-def _save_mappings(mappings, output_file, min_score, mapper, target_ontology, base_iris,
-                   excl_deprecated, max_mappings, term_type, source_terms, incl_unmapped):
-    if os.path.dirname(output_file):  # create output directories if needed
-        os.makedirs(os.path.dirname(output_file), exist_ok=True)
-    with open(output_file, "a") as f:
-        f.write("# Timestamp: %s\n" % datetime.datetime.now())
-        f.write("# Target Ontology: %s\n" % target_ontology)
-        f.write("# text2term version: %s\n" % VERSION)
-        f.write("# Minimum Score: %.2f\n" % min_score)
-        f.write("# Mapper: %s\n" % mapper.value)
-        f.write("# Base IRIs: %s\n" % (base_iris,))
-        f.write("# Max Mappings: %d\n" % max_mappings)
-        f.write("# Term Type: %s\n" % term_type)
-        f.write("# Deprecated Terms ")
-        f.write("Excluded\n" if excl_deprecated else "Included\n")
-        f.write("# Unmapped Terms ")
-        f.write("Excluded\n" if not incl_unmapped else "Included\n")
-        writestring = "# Of " + str(len(source_terms)) + " entries, " + str(len(pd.unique(mappings["Source Term ID"])))
-        writestring += " were mapped to " + str(
-            len(pd.unique(mappings["Mapped Term IRI"]))) + " unique terms\n"
-        f.write(writestring)
-    mappings.to_csv(output_file, index=False, mode='a')
+def _save_mappings(
+    mappings: pd.DataFrame,
+    output_file: str,
+    min_score: float,
+    mapper,
+    target_ontology: str,
+    base_iris,
+    excl_deprecated: bool,
+    max_mappings: int,
+    term_type: str,
+    source_terms,
+    incl_unmapped: bool,
+    excl_metadata: bool = False,
+) -> None:
+    # create output directory if needed
+    out_path = Path(output_file)
+    if out_path.parent != Path('.'):
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+
+    if not excl_metadata:
+        metadata_lines = [
+            f"# Timestamp: {datetime.datetime.now()}",
+            f"# Target Ontology: {target_ontology}",
+            f"# text2term version: {VERSION}",
+            f"# Minimum Score: {min_score:.2f}",
+            f"# Mapper: {mapper.value}",
+            f"# Base IRIs: {base_iris}",
+            f"# Max Mappings: {max_mappings}",
+            f"# Term Type: {term_type}",
+            "# Deprecated Terms " + ("Excluded" if excl_deprecated else "Included"),
+            "# Unmapped Terms " + ("Included" if incl_unmapped else "Excluded"),
+        ]
+
+        unique_source_ids = pd.unique(mappings["Source Term ID"])
+        unique_mapped_iris = pd.unique(mappings["Mapped Term IRI"])
+        mapping_count_line = (
+            f"# Of {len(source_terms)} entries, "
+            f"{len(unique_source_ids)} were mapped to "
+            f"{len(unique_mapped_iris)} unique terms"
+        )
+        metadata_lines.append(mapping_count_line)
+
+        with open(output_file, "a", encoding="utf-8") as f:
+            f.write("\n".join(metadata_lines) + "\n")
+
+    mappings.to_csv(output_file, index=False, mode="a", encoding="utf-8")
 
 
 def _save_graphs(terms, output_file):
