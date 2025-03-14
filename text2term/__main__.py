@@ -45,7 +45,7 @@ if __name__ == "__main__":
     parser.add_argument('-bp', "--bioportal_apikey", required=False, type=str, default="",
                         help="BioPortal API Key to use along with the BioPortal mapper option")
     parser.add_argument('-md', "--excl_metadata", required=False, default=False, action="store_true",
-                        help="Include metadata in the output file")
+                        help="Exclude metadata in the output file")
 
     arguments = parser.parse_args()
     if not os.path.exists(arguments.source):
