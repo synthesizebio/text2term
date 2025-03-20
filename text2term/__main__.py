@@ -44,6 +44,8 @@ if __name__ == "__main__":
                         help="Include all unmapped terms in the output")
     parser.add_argument('-bp', "--bioportal_apikey", required=False, type=str, default="",
                         help="BioPortal API Key to use along with the BioPortal mapper option")
+    parser.add_argument('-md', "--excl_metadata", required=False, default=False, action="store_true",
+                        help="Exclude metadata in the output file")
 
     arguments = parser.parse_args()
     if not os.path.exists(arguments.source):
@@ -65,5 +67,5 @@ if __name__ == "__main__":
               excl_deprecated=arguments.excl_deprecated, mapper=mapper, max_mappings=arguments.top_mappings,
               min_score=arguments.min_score, base_iris=iris, save_graphs=arguments.save_term_graphs,
               save_mappings=True, separator=arguments.separator, use_cache=cache_exists(target),
-              term_type=arguments.term_type, incl_unmapped=arguments.incl_unmapped,
+              term_type=arguments.term_type, incl_unmapped=arguments.incl_unmapped, excl_metadata=arguments.excl_metadata,
               bioportal_apikey=arguments.bioportal_apikey)
