@@ -153,7 +153,7 @@ text2term.map_terms(source_terms,               # strings to map or pointer to f
                     excl_deprecated=False,      # exclude ontology deprecated terms
                     term_type='class',          # ontology term type(s) to map to
                     save_graphs=False,          # save vis.js file with term graphs
-                    save_mappings=False,        # save mappings to file or mot
+                    save_mappings=False,        # save mappings to file
                     output_file='',             # filepath of output mappings file
                     csv_columns=(),             # table columns with strings and IDs
                     separator=',',              # column separator of input table 
