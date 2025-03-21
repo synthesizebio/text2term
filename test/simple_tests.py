@@ -25,6 +25,12 @@ class Text2TermTestSuite(unittest.TestCase):
     def tearDownClass(cls):
         super(Text2TermTestSuite, cls).tearDownClass()
         text2term.clear_cache()
+        test_output_file_without_metadata = "test_output_without_metadata.csv"
+        if os.path.exists(test_output_file_without_metadata):
+            os.remove(test_output_file_without_metadata)
+        test_output_file_with_metadata = "test_output_with_metadata.csv"
+        if os.path.exists(test_output_file_with_metadata):
+            os.remove("test_output_with_metadata.csv")
 
     def test_caching_ontology_from_url(self):
         # Test caching an ontology loaded from a URL
@@ -229,6 +235,24 @@ class Text2TermTestSuite(unittest.TestCase):
         df = text2term.map_terms(["asthma", "margarita"], target_ontology="EFO", use_cache=True, mapper=Mapper.TFIDF,
                                  incl_unmapped=True, min_score=0.8)
         assert df[self.TAGS_COLUMN].str.contains("unmapped").any()
+
+    def test_exclude_metadata_from_output_file(self):
+        self.ensure_cache_exists("EFO", self.EFO_URL)
+        test_output_file = "test_output_without_metadata.csv"
+        text2term.map_terms(["asthma"], target_ontology="EFO", use_cache=True, mapper=Mapper.TFIDF,
+                                 excl_metadata=True, save_mappings=True, output_file=test_output_file)
+        with open(test_output_file, 'r', encoding='utf-8') as f:
+            first_line = f.readline()
+            assert not first_line.startswith('#'), "CSV output file should not start with metadata header"
+
+    def test_include_metadata_in_output_file(self):
+        self.ensure_cache_exists("EFO", self.EFO_URL)
+        test_output_file = "test_output_with_metadata.csv"
+        text2term.map_terms(["asthma"], target_ontology="EFO", use_cache=True, mapper=Mapper.TFIDF,
+                                 excl_metadata=False, save_mappings=True, output_file=test_output_file)
+        with open(test_output_file, 'r', encoding='utf-8') as f:
+            first_line = f.readline()
+            assert first_line.startswith('#'), "CSV output file should contain metadata header"
 
     def test_include_unmapped_terms_when_mappings_df_is_empty(self):
         self.ensure_cache_exists("EFO", self.EFO_URL)
