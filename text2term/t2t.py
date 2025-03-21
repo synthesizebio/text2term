@@ -362,9 +362,9 @@ def _save_mappings(
         unique_source_ids = pd.unique(mappings["Source Term ID"])
         unique_mapped_iris = pd.unique(mappings["Mapped Term IRI"])
         mapping_count_line = (
-            f"# Of {len(source_terms)} entries, "
+            f"# Of {len(source_terms)} input terms, "
             f"{len(unique_source_ids)} were mapped to "
-            f"{len(unique_mapped_iris)} unique terms"
+            f"{len(unique_mapped_iris)} unique ontology terms"
         )
         metadata_lines.append(mapping_count_line)
 
