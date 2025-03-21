@@ -19,7 +19,7 @@ def preprocess_tagged_terms(file_path, template_path="", blocklist_path="",
 			term = TaggedTerm(original_term=raw_term)
 		terms.append(term)
 
-	# Seperate tags from templates, store together in dictionary
+	# Separate tags from templates, store together in dictionary
 	templates = {}
 	if template_path != "":
 		raw_templates = _get_values(template_path)
