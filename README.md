@@ -20,6 +20,9 @@
    <a href="https://shields.io/badges/pepy-total-downlods" target="_blank">
       <img alt="Total Downloads" src="https://img.shields.io/pepy/dt/text2term?label=downloads&color=D10000">
    </a>
+   <a href="https://github.com/rsgoncalves/text2term/blob/main/.github/code_of_conduct.md" target="_blank">
+      <img alt="Contributor Covenant" src="https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg">
+   </a>
 </div>
 
 ## Installation
@@ -159,7 +162,8 @@ text2term.map_terms(source_terms,               # strings to map or pointer to f
                     separator=',',              # column separator of input table 
                     use_cache=False,            # use a locally cached ontology
                     incl_unmapped=False,        # include unmapped strings in output
-                    bioportal_apikey='')        # API key to use the BioPortal mapper 
+                    bioportal_apikey='',        # API key to use the BioPortal mapper
+                    excl_metadata=False)        # exclude metadata from the output file
 ```
 The function returns a pandas `DataFrame` containing the generated ontology mappings.
 
@@ -207,6 +211,8 @@ When using the BioPortal or Zooma interfaces, the value for `target_ontology` sh
 `incl_unmapped`&mdash;Include unmapped terms in the output. If a term has been tagged 'Ignore' or has less than the `min_score`, it is included in the output data frame
 
 `bioportal_apikey`&mdash;BioPortal API Key to use along with the BioPortal mapper option
+
+`excl_metadata`&mdash;Exclude the metadata header in the output file
 
 
 ### Ontology Caching
@@ -271,7 +277,7 @@ If an ignore tag `"ignore"` or `"Ignore"` is added to a term, that term will not
 
 After installing, execute the tool from a command line as follows:
 
-`python text2term [-h] -s SOURCE -t TARGET [-o OUTPUT] [-m MAPPER] [-csv CSV_INPUT] [-sep SEPARATOR] [-top TOP_MAPPINGS] [-min MIN_SCORE] [-iris BASE_IRIS] [-d] [-g] [-c STORE_IN_CACHE] [-type TERM_TYPE] [-u] [-bp BIOPORTAL_APIKEY]`
+`python text2term [-h] -s SOURCE -t TARGET [-o OUTPUT] [-m MAPPER] [-csv CSV_INPUT] [-sep SEPARATOR] [-top TOP_MAPPINGS] [-min MIN_SCORE] [-iris BASE_IRIS] [-d] [-g] [-c STORE_IN_CACHE] [-type TERM_TYPE] [-u] [-bp BIOPORTAL_APIKEY] [-md]`
 
 To display a help message with descriptions of tool arguments do:
 
@@ -310,6 +316,8 @@ To display a help message with descriptions of tool arguments do:
 `-u` Include all unmapped terms in the output
 
 `-bp` BioPortal API Key to use along with the BioPortal mapper option
+
+`-md` Exclude the metadata header in the output file
 
 ## Supported Mappers 
 

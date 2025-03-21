@@ -101,7 +101,7 @@ class OntologyTerm:
         For example, for a restriction such as ':has_disease_location :pancreas', the dictionary would have:
         {':has_disease_location': ':pancreas'}
         For nested expressions such as 'has_disease_location (:pancreas or :liver);, the dictionary would have a string
-        representation of that expression (using owlready2s to_str):
+        representation of that expression (using owlready's to_str):
         {':has_disease_location': ':pancreas | :liver'}
         :return: dict
         """
