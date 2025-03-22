@@ -118,7 +118,8 @@ def _update_tagged_term(processed_terms, term, new_term, tags=[]):
 
 
 def _get_values(path):
-	return open(path).read().splitlines()
+	with open(path, "r", encoding="utf-8") as f:
+		return f.read().splitlines()
 
 
 def _make_regex_list(strings):

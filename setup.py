@@ -22,7 +22,6 @@ setup(
     author_email='rsgoncalves@gmx.com',
     classifiers=[
         'Development Status :: 4 - Beta',
-        'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
         'Environment :: Console',
         'Programming Language :: Python',
