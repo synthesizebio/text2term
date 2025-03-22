@@ -80,7 +80,7 @@ class OntologyTermCollector:
                         owl_term_type = OntologyTermType.PROPERTY
                     else:
                         owl_term_type = "undetermined"
-                        self.logger.warn("Term has undetermined type %s %s", iri, labels)
+                        self.logger.warning("Term has undetermined type %s %s", iri, labels)
                     term_details = OntologyTerm(iri, labels, definitions=definitions, synonyms=synonyms,
                                                 parents=named_parents, children=children, instances=instances,
                                                 restrictions=complex_parents, deprecated=is_deprecated,
