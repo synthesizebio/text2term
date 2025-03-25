@@ -218,7 +218,7 @@ When using the BioPortal or Zooma interfaces, the value for `target_ontology` sh
 
 `bioportal_apikey`&mdash;BioPortal API Key to use along with the BioPortal mapper option
 
-`excl_metadata`&mdash;Exclude the metadata header in the output file
+`excl_metadata`&mdash;Exclude the metadata header from the output file
 
 
 ### Ontology Caching
