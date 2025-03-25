@@ -18,7 +18,7 @@ setup(
     description=description,
     long_description=long_description,
     long_description_content_type='text/markdown',
-    author='Rafael Goncalves, Jason Payne',
+    author='Rafael Gonçalves, Jason Payne',
     author_email='rsgoncalves@gmx.com',
     classifiers=[
         'Development Status :: 4 - Beta',
