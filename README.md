@@ -3,13 +3,16 @@
    <h4>A tool for mapping free-text descriptions of (biomedical) entities to ontology terms</h4>
 
    <a href="https://pypi.org/project/text2term" target="_blank">
-        <img alt="PyPI" src="https://img.shields.io/pypi/v/text2term" />
+      <img alt="Latest release version" src="https://img.shields.io/pypi/v/text2term" />
    </a>
-   <a href="https://github.com/rsgoncalves/text2term/blob/main/LICENSE" target="_blank">
-        <img alt="PyPI - License" src="https://img.shields.io/pypi/l/text2term" />
+   <a href="https://pypi.org/project/text2term" target="_blank">
+      <img alt="Latest release date" src="https://img.shields.io/github/release-date/rsgoncalves/text2term?&color=%2393c8eb" />
    </a>
    <a href="https://github.com/rsgoncalves/text2term/actions/workflows/github_test.yml" target="_blank">
-        <img alt="Tests" src="https://github.com/rsgoncalves/text2term/actions/workflows/github_test.yml/badge.svg" />
+      <img alt="Tests" src="https://github.com/rsgoncalves/text2term/actions/workflows/github_test.yml/badge.svg" />
+   </a>
+   <a href="https://codecov.io/gh/rsgoncalves/text2term" target="_blank"> 
+      <img alt="Test coverage" src="https://codecov.io/gh/rsgoncalves/text2term/graph/badge.svg?token=7O155IVIYC"/> 
    </a>
    <a href="https://doi.org/10.1093/database/baae119" target="_blank">
       <img alt="Citation" src="https://img.shields.io/badge/DOI-10.1093/database/baae119-orange" />
@@ -19,6 +22,9 @@
    </a>
    <a href="https://shields.io/badges/pepy-total-downlods" target="_blank">
       <img alt="Total Downloads" src="https://img.shields.io/pepy/dt/text2term?label=downloads&color=D10000">
+   </a>
+   <a href="https://github.com/rsgoncalves/text2term/blob/main/LICENSE" target="_blank">
+        <img alt="License" src="https://img.shields.io/pypi/l/text2term" />
    </a>
    <a href="https://github.com/rsgoncalves/text2term/blob/main/.github/code_of_conduct.md" target="_blank">
       <img alt="Contributor Covenant" src="https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg">

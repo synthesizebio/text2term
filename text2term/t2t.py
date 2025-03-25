@@ -271,17 +271,22 @@ def _process_tags(source_terms, tags):
 
 
 def _add_tags_to_df(df, tags):
+    # Ensure the Tags column is of type object to accept strings
+    if "Tags" not in df.columns:
+        df["Tags"] = None
+    df["Tags"] = df["Tags"].astype("object")
+
     if isinstance(tags, dict):
-        for key, value in tags.items():
-            if isinstance(value, list):
-                to_store = ','.join(value)
-            else:
-                to_store = str(value)
-            df.loc[df['Source Term'] == key, "Tags"] = to_store
+        tag_map = {
+            key: ",".join(value) if isinstance(value, list) else str(value)
+            for key, value in tags.items()
+        }
     else:
-        for term in tags:
-            to_store = ','.join(term.get_tags())
-            df.loc[df['Source Term'] == term.get_term(), "Tags"] = to_store
+        tag_map = {
+            term.get_term(): ",".join(term.get_tags())
+            for term in tags
+        }
+    df["Tags"] = df["Source Term"].map(tag_map).combine_first(df["Tags"])
     return df
 
 

@@ -60,6 +60,7 @@ class Text2TermTestSuite(unittest.TestCase):
         assert len(caches) == nr_ontologies_in_registry
 
     def test_mapping_to_cached_ontology(self):
+        text2term.clear_cache()
         self.ensure_cache_exists("EFO", self.EFO_URL)
         # Test mapping a list of terms to EFO loaded from cache
         print("Test mapping a list of terms to EFO loaded from cache...")
