@@ -1,8 +1,7 @@
 from setuptools import setup, find_packages
 import re
 
-# Define version statically or extract it without importing
-VERSION = '0.1.0'  # Replace with your actual version number
+VERSION = '4.3.1'
 
 description = 'a tool for mapping free-text descriptions of entities to ontology terms'
 long_description = open('README.md').read()
