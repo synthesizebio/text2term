@@ -20,11 +20,12 @@ class Text2TermTestSuite(unittest.TestCase):
         cls.MAPPED_TERM_CURIE_COLUMN = "Mapped Term CURIE"
         cls.MAPPING_SCORE_COLUMN = "Mapping Score"
         cls.TAGS_COLUMN = "Tags"
+        cls.TEST_CACHE_FOLDER = ".test_cache"
 
     @classmethod
     def tearDownClass(cls):
         super(Text2TermTestSuite, cls).tearDownClass()
-        text2term.clear_cache()
+        text2term.clear_cache(cache_folder=cls.TEST_CACHE_FOLDER)
         test_output_file_without_metadata = "test_output_without_metadata.csv"
         if os.path.exists(test_output_file_without_metadata):
             os.remove(test_output_file_without_metadata)
@@ -35,7 +36,7 @@ class Text2TermTestSuite(unittest.TestCase):
     def test_caching_ontology_from_url(self):
         # Test caching an ontology loaded from a URL
         print("Test caching an ontology loaded from a URL...")
-        efo_cache = text2term.cache_ontology(ontology_url=self.EFO_URL, ontology_acronym="EFO")
+        efo_cache = text2term.cache_ontology(ontology_url=self.EFO_URL, ontology_acronym="EFO", cache_folder=self.TEST_CACHE_FOLDER)
         print(f"Cache exists: {efo_cache.cache_exists()}\n")
         assert efo_cache.cache_exists() is True
 
@@ -47,7 +48,7 @@ class Text2TermTestSuite(unittest.TestCase):
     def test_caching_ontology_from_acronym(self):
         # Test caching an ontology by resolving its acronym using bioregistry
         print("Test caching an ontology by resolving its acronym using bioregistry...")
-        clo_cache = text2term.cache_ontology(ontology_url="CLO", ontology_acronym="CLO")
+        clo_cache = text2term.cache_ontology(ontology_url="CLO", ontology_acronym="CLO", cache_folder=self.TEST_CACHE_FOLDER)
         print(f"Cache exists: {clo_cache.cache_exists()}\n")
         assert clo_cache.cache_exists() is True
 
@@ -56,16 +57,16 @@ class Text2TermTestSuite(unittest.TestCase):
         nr_ontologies_in_registry = len(pd.read_csv(ontology_registry_filepath))
 
         # Test caching the set of ontologies specified in resources/ontologies.csv
-        caches = text2term.cache_ontology_set(ontology_registry_filepath)
+        caches = text2term.cache_ontology_set(ontology_registry_filepath, cache_folder=self.TEST_CACHE_FOLDER)
         assert len(caches) == nr_ontologies_in_registry
 
     def test_mapping_to_cached_ontology(self):
-        text2term.clear_cache()
+        text2term.clear_cache(cache_folder=self.TEST_CACHE_FOLDER)
         self.ensure_cache_exists("EFO", self.EFO_URL)
         # Test mapping a list of terms to EFO loaded from cache
         print("Test mapping a list of terms to EFO loaded from cache...")
         mappings_efo_cache = text2term.map_terms(["asthma", "disease location", "food allergy"], target_ontology="EFO",
-                                                 use_cache=True, term_type=OntologyTermType.ANY)
+                                                 use_cache=True, term_type=OntologyTermType.ANY, cache_folder=self.TEST_CACHE_FOLDER)
         print(f"{mappings_efo_cache}\n")
         assert mappings_efo_cache.size > 0
 
@@ -88,7 +89,7 @@ class Text2TermTestSuite(unittest.TestCase):
         # Test mapping a list of terms to cached EFO using Jaro-Winkler syntactic similarity metric
         print("Test mapping a list of terms to cached ontology using Jaro-Winkler syntactic similarity metric...")
         df = text2term.map_terms(["asthma", "disease location", "food allergy"], "EFO", use_cache=True,
-                                 mapper=text2term.Mapper.JARO_WINKLER, term_type=OntologyTermType.ANY)
+                                 mapper=text2term.Mapper.JARO_WINKLER, term_type=OntologyTermType.ANY, cache_folder=self.TEST_CACHE_FOLDER)
         print(f"{df}\n")
         assert df.size > 0
 
@@ -106,7 +107,7 @@ class Text2TermTestSuite(unittest.TestCase):
         print("Test mapping a dictionary of tagged terms to cached EFO, and include unmapped terms in the output...")
         df3 = text2term.map_terms(
             {"asthma": "disease", "allergy": ["ignore", "response"], "protein level": ["measurement"],
-             "isdjfnsdfwd": None}, target_ontology="EFO", excl_deprecated=True, use_cache=True, incl_unmapped=True)
+             "isdjfnsdfwd": None}, target_ontology="EFO", excl_deprecated=True, use_cache=True, incl_unmapped=True, cache_folder=self.TEST_CACHE_FOLDER)
         print(f"{df3}\n")
         assert df3.size > 0
         assert df3[self.TAGS_COLUMN].str.contains("disease").any()
@@ -117,7 +118,7 @@ class Text2TermTestSuite(unittest.TestCase):
         # Test processing tagged terms where the tags are provided in a file
         print("Test processing tagged terms where the tags are provided in a file...")
         tagged_terms = text2term.preprocess_tagged_terms("simple_preprocess.txt")
-        df4 = text2term.map_terms(tagged_terms, target_ontology="EFO", use_cache=True, incl_unmapped=True)
+        df4 = text2term.map_terms(tagged_terms, target_ontology="EFO", use_cache=True, incl_unmapped=True, cache_folder=self.TEST_CACHE_FOLDER)
         print(f"{df4}\n")
         assert df4.size > 0
         assert df4[self.TAGS_COLUMN].str.contains("disease").any()
@@ -135,7 +136,7 @@ class Text2TermTestSuite(unittest.TestCase):
         print("Test mapping a list of properties to EFO loaded from cache and restrict search to properties...")
         self.ensure_cache_exists("EFO", self.EFO_URL)
         df6 = text2term.map_terms(source_terms=["contains", "location"], target_ontology="EFO", use_cache=True,
-                                  term_type=OntologyTermType.PROPERTY)
+                                  term_type=OntologyTermType.PROPERTY, cache_folder=self.TEST_CACHE_FOLDER)
         print(f"{df6}\n")
         assert df6.size > 0
 
@@ -216,32 +217,32 @@ class Text2TermTestSuite(unittest.TestCase):
 
         print("Test mapping to cached EFO using TFIDF similarity metric and min_score filter...")
         df_tfidf = text2term.map_terms(search_terms, target_ontology="EFO", use_cache=True, mapper=Mapper.TFIDF,
-                                       term_type=OntologyTermType.ANY, min_score=min_score)
+                                       term_type=OntologyTermType.ANY, min_score=min_score, cache_folder=self.TEST_CACHE_FOLDER)
         assert (df_tfidf[self.MAPPING_SCORE_COLUMN] >= min_score).all()
 
         print("Test mapping to cached EFO using Levenshtein similarity metric and min_score filter...")
         df_leven = text2term.map_terms(search_terms, target_ontology="EFO", use_cache=True, mapper=Mapper.LEVENSHTEIN,
-                                       term_type=OntologyTermType.ANY, min_score=min_score)
+                                       term_type=OntologyTermType.ANY, min_score=min_score, cache_folder=self.TEST_CACHE_FOLDER)
         assert (df_leven[self.MAPPING_SCORE_COLUMN] >= min_score).all()
 
     def test_mapping_with_min_score_filter_empty_results(self):
         self.ensure_cache_exists("EFO", self.EFO_URL)
         print("Test mapping to EFO using TFIDF similarity metric and min_score filter that results in no mappings...")
         df_tfidf = text2term.map_terms(["carbon monoxide"], target_ontology="EFO", use_cache=True, mapper=Mapper.TFIDF,
-                                       term_type=OntologyTermType.ANY, min_score=0.99)
+                                       term_type=OntologyTermType.ANY, min_score=0.99, cache_folder=self.TEST_CACHE_FOLDER)
         assert df_tfidf.empty is True
 
     def test_include_unmapped_terms(self):
         self.ensure_cache_exists("EFO", self.EFO_URL)
         df = text2term.map_terms(["asthma", "margarita"], target_ontology="EFO", use_cache=True, mapper=Mapper.TFIDF,
-                                 incl_unmapped=True, min_score=0.8)
+                                 incl_unmapped=True, min_score=0.8, cache_folder=self.TEST_CACHE_FOLDER)
         assert df[self.TAGS_COLUMN].str.contains("unmapped").any()
 
     def test_exclude_metadata_from_output_file(self):
         self.ensure_cache_exists("EFO", self.EFO_URL)
         test_output_file = "test_output_without_metadata.csv"
         text2term.map_terms(["asthma"], target_ontology="EFO", use_cache=True, mapper=Mapper.TFIDF,
-                                 excl_metadata=True, save_mappings=True, output_file=test_output_file)
+                                 excl_metadata=True, save_mappings=True, output_file=test_output_file, cache_folder=self.TEST_CACHE_FOLDER)
         with open(test_output_file, 'r', encoding='utf-8') as f:
             first_line = f.readline()
             assert not first_line.startswith('#'), "CSV output file should not start with metadata header"
@@ -250,7 +251,7 @@ class Text2TermTestSuite(unittest.TestCase):
         self.ensure_cache_exists("EFO", self.EFO_URL)
         test_output_file = "test_output_with_metadata.csv"
         text2term.map_terms(["asthma"], target_ontology="EFO", use_cache=True, mapper=Mapper.TFIDF,
-                                 excl_metadata=False, save_mappings=True, output_file=test_output_file)
+                                 excl_metadata=False, save_mappings=True, output_file=test_output_file, cache_folder=self.TEST_CACHE_FOLDER)
         with open(test_output_file, 'r', encoding='utf-8') as f:
             first_line = f.readline()
             assert first_line.startswith('#'), "CSV output file should contain metadata header"
@@ -258,7 +259,7 @@ class Text2TermTestSuite(unittest.TestCase):
     def test_include_unmapped_terms_when_mappings_df_is_empty(self):
         self.ensure_cache_exists("EFO", self.EFO_URL)
         df = text2term.map_terms(["mojito", "margarita"], target_ontology="EFO", use_cache=True, mapper=Mapper.TFIDF,
-                                 incl_unmapped=True, min_score=0.8)
+                                 incl_unmapped=True, min_score=0.8, cache_folder=self.TEST_CACHE_FOLDER)
         assert df[self.TAGS_COLUMN].str.contains("unmapped").any()
 
     def drop_source_term_ids(self, df):
@@ -272,8 +273,8 @@ class Text2TermTestSuite(unittest.TestCase):
         return True
 
     def ensure_cache_exists(self, ontology_name, ontology_url):
-        if not text2term.cache_exists(ontology_name):
-            text2term.cache_ontology(ontology_url=ontology_url, ontology_acronym=ontology_name)
+        if not text2term.cache_exists(ontology_name, cache_folder=self.TEST_CACHE_FOLDER):
+            text2term.cache_ontology(ontology_url=ontology_url, ontology_acronym=ontology_name, cache_folder=self.TEST_CACHE_FOLDER)
 
 
 if __name__ == '__main__':
