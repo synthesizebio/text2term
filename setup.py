@@ -1,5 +1,8 @@
 from setuptools import setup, find_packages
-from text2term.config import VERSION
+import re
+
+# Define version statically or extract it without importing
+VERSION = '0.1.0'  # Replace with your actual version number
 
 description = 'a tool for mapping free-text descriptions of entities to ontology terms'
 long_description = open('README.md').read()
