@@ -10,8 +10,6 @@ from shutil import rmtree
 """
 CACHING FUNCTIONS -- Public
 """
-
-
 # Caches many ontologies from a csv
 def cache_ontology_set(ontology_registry_path, cache_folder=".cache"):
     registry = pd.read_csv(ontology_registry_path)
@@ -26,11 +24,9 @@ def cache_ontology_set(ontology_registry_path, cache_folder=".cache"):
         owlready2.default_world.ontologies.clear()
     return cache_set
 
-
 # Will check if an acronym exists in the cache
 def cache_exists(ontology_acronym='', cache_folder=".cache"):
     return os.path.exists(os.path.join(cache_folder, ontology_acronym))
-
 
 # Clears the cache
 def clear_cache(ontology_acronym='', cache_folder=".cache"):
@@ -44,7 +40,6 @@ def clear_cache(ontology_acronym='', cache_folder=".cache"):
     except OSError as error:
         sys.stderr.write("Cache cannot be removed:")
         sys.stderr.write(str(error))
-
 
 # Class that is returned to run
 class OntologyCache:
@@ -70,3 +65,4 @@ class OntologyCache:
 
     def acronym(self):
         return self.acronym
+    
