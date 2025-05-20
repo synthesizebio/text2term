@@ -100,6 +100,10 @@ def cache_ontology_set(ontology_registry_path, cache_folder=None):
     # Create the cache directory if it doesn't exist
     os.makedirs(cache_folder, exist_ok=True)
     
+    # Ensure the registry path exists before attempting to read it
+    if not os.path.exists(ontology_registry_path):
+        raise FileNotFoundError(f"Ontology registry file not found: {ontology_registry_path}")
+    
     registry = pd.read_csv(ontology_registry_path)
     cache_set = {}
     for index, row in registry.iterrows():
@@ -216,5 +220,4 @@ class OntologyCache:
     def acronym(self):
         """Get the acronym for this ontology."""
         return self.acronym
-    
     
