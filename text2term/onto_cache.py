@@ -63,6 +63,7 @@ def set_cache_folder(folder_path):
     DEFAULT_CACHE_FOLDER = folder_path
     # Create the cache directory if it doesn't exist
     os.makedirs(DEFAULT_CACHE_FOLDER, exist_ok=True)
+    print(f"cache folder set to {folder_path}")
     return DEFAULT_CACHE_FOLDER
 
 # Get the current default cache folder

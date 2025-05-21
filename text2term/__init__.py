@@ -3,6 +3,8 @@ from .t2t import cache_ontology
 from .onto_cache import cache_ontology_set
 from .onto_cache import cache_exists
 from .onto_cache import clear_cache
+from .onto_cache import set_cache_folder
+from .onto_cache import get_cache_folder
 from .mapper import Mapper
 from .preprocess import preprocess_terms
 from .preprocess import preprocess_tagged_terms

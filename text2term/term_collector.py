@@ -5,17 +5,21 @@ from text2term import onto_utils
 from text2term.term import OntologyTerm, OntologyTermType
 import logging
 import bioregistry
-
+import os
 
 class OntologyTermCollector:
 
-    def __init__(self, ontology_iri, use_reasoning=False, log_level=logging.INFO):
+    def __init__(self, ontology_iri, 
+                 use_reasoning=False, 
+                 log_level=logging.INFO, 
+                 cache_folder: str = os.path.join(os.path.expanduser("~"), ".cache")):
         """
         Construct an ontology term collector for the ontology at the given IRI
         :param ontology_iri: IRI of the ontology (e.g., path of ontology document in the local file system, URL)
         :param use_reasoning: Use a reasoner to compute inferred class hierarchy
         """
         self.logger = onto_utils.get_logger(__name__, level=log_level)
+        self.cache_folder = cache_folder  # Store the cache folder
         self.ontology = self._load_ontology(ontology_iri)
         if use_reasoning:
             self._classify_ontology(self.ontology)
@@ -343,7 +347,19 @@ class OntologyTermCollector:
         owl_link = bioregistry.get_owl_download(ontology_iri)
         if owl_link is not None:
             ontology_iri = owl_link
+            
+        # Configure caching if a cache folder is provided
+        if self.cache_folder:
+            # Use owlready2's built-in caching mechanism
+            from owlready2 import onto_path
+            
+            # Add the cache folder to the ontology search path if it's not already there
+            if self.cache_folder not in onto_path:
+                onto_path.append(self.cache_folder)
+        
+        # Load the ontology - no separate call to set_cache_path needed
         ontology = get_ontology(ontology_iri).load()
+            
         end = time.time()
         self._log_ontology_metrics(ontology)
         self.logger.info("...done (ontology loading time: %.2fs)", end - start)
